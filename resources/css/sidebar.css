@@ -1,0 +1,47 @@
+.sidebar{
+    width:270px;
+    position:fixed;
+    left:0;
+    top:0;
+    bottom:0;
+
+    background:var(--sidebar);
+
+    color:white;
+
+    padding:25px;
+}
+
+.sidebar-logo{
+
+    font-size:24px;
+
+    font-weight:700;
+
+    margin-bottom:40px;
+
+}
+
+.sidebar a{
+
+    display:block;
+
+    padding:14px 18px;
+
+    border-radius:12px;
+
+    color:white;
+
+    text-decoration:none;
+
+    margin-bottom:10px;
+
+    transition:.2s;
+
+}
+
+.sidebar a:hover{
+
+    background:var(--sidebar-hover);
+
+}

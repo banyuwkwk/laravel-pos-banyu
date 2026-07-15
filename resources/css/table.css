@@ -1,0 +1,25 @@
+.table{
+
+    vertical-align:middle;
+
+}
+
+.table thead{
+
+    background:#F8FAFC;
+
+}
+
+.table th{
+
+    font-weight:600;
+
+    color:var(--dark);
+
+}
+
+.table td{
+
+    color:#475569;
+
+}

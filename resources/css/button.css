@@ -1,0 +1,15 @@
+.btn-primary{
+    background:var(--primary);
+    border:none;
+    border-radius:12px;
+    padding:10px 20px;
+    font-weight:500;
+}
+
+.btn-primary:hover{
+    background:var(--primary-hover);
+}
+
+.btn-outline-secondary{
+    border-radius:12px;
+}

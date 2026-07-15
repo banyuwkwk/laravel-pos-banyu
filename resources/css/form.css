@@ -1,0 +1,19 @@
+.form-control,
+.form-select{
+
+    border-radius:12px;
+
+    padding:12px;
+
+    border:1px solid #CBD5E1;
+
+}
+
+.form-control:focus,
+.form-select:focus{
+
+    box-shadow:none;
+
+    border-color:var(--primary);
+
+}

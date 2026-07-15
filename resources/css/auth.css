@@ -1,0 +1,22 @@
+.auth-body{
+    background:#F1F5F9;
+}
+
+.auth-body .app-card{
+    padding:40px;
+}
+
+.auth-title{
+    font-size:28px;
+    font-weight:700;
+}
+
+.auth-subtitle{
+    color:#64748B;
+    margin-bottom:30px;
+}
+
+.auth-footer{
+    text-align:center;
+    margin-top:20px;
+}

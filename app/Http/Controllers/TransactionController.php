@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\TransactionService;
 use App\Services\ProductService;
+use App\Http\Requests\StoreTransactionRequest;
 
 class TransactionController extends Controller
 {
@@ -35,9 +36,20 @@ class TransactionController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(StoreTransactionRequest $request)
     {
-        //
+        $transaction = $this->transactionService
+            ->checkout($request->validated());
+
+        return response()->json([
+
+            'success' => true,
+
+            'message' => 'Transaction successful.',
+
+            'invoice' => $transaction->invoice_number,
+
+        ]);
     }
 
     public function search()

@@ -1,6 +1,8 @@
 import './bootstrap';
+// import '/.dashboard'
+// import './product'
 import './cashier';
-import './pages/transaction-create';
+// import './pages/transaction-create';    
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../css/app.css';
 import Alpine from 'alpinejs';

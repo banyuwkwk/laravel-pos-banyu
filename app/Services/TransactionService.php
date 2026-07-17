@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 
 use App\Models\Transaction;
+use App\Models\TransactionDetail;
 use App\Models\Product;
 
 class TransactionService
@@ -23,7 +24,7 @@ class TransactionService
 
     public function createInvoiceNumber(): string
     {
-        $lastTransaction = Transaction::latest()->first();
+        $lastTransaction = Transaction::orderByDesc('id')->first();
 
         $lastNumber = 0;
 
@@ -48,6 +49,14 @@ class TransactionService
 
                 $product = Product::findOrFail($item['id']);
 
+                if ($item['qty'] > $product->stock) {
+
+                    throw new \Exception(
+                        "Stock {$product->name} is not enough."
+                    );
+
+                }
+
                 $subtotal += $product->price * $item['qty'];
 
             }
@@ -62,7 +71,7 @@ class TransactionService
 
             $transaction = $this->transactionRepository->store([
 
-                'invoice_number' => $this->createInvoiceNumber(),
+                'invoice_number' => $data['invoice_number'],
 
                 'user_id' => auth()->id(),
 
@@ -83,6 +92,28 @@ class TransactionService
                 'status' => 'paid',
 
             ]);
+
+            foreach ($data['cart'] as $item) {
+
+            $product = Product::findOrFail($item['id']);
+
+            TransactionDetail::create([
+
+                'transaction_id' => $transaction->id,
+
+                'product_id' => $product->id,
+
+                'price' => $product->price,
+
+                'qty' => $item['qty'],
+
+                'subtotal' => $product->price * $item['qty'],
+
+            ]);
+
+            $product->decrement('stock', $item['qty']);
+
+        }
 
             return $transaction;
 

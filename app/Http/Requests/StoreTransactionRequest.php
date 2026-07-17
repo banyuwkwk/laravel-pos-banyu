@@ -38,6 +38,11 @@ class StoreTransactionRequest extends FormRequest
                 'min:0',
             ],
 
+            'invoice_number' => [
+            'required',
+            'string',
+            ],
+
         ];
     }
 

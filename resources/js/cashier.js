@@ -1,3 +1,5 @@
+import { Toast } from 'bootstrap';
+
 const searchInput = document.getElementById('search-product');
 
 if (searchInput) {
@@ -250,5 +252,97 @@ onclick="removeItem(${item.id})">
         calculateChange();
 
     }
+
+    async function checkout() {
+
+    console.log("Checkout clicked");
+
+    const cash = Number(cashInput.value);
+
+    const response = await fetch('/dashboard/sales', {
+
+        method: 'POST',
+
+        headers: {
+
+            'Content-Type': 'application/json',
+
+            'X-CSRF-TOKEN': document
+                .querySelector('meta[name="csrf-token"]')
+                .content,
+
+        },
+
+        body: JSON.stringify({
+
+            invoice_number: document.querySelector('input[readonly]').value,
+
+            cash: cash,
+
+            cart: cart,
+
+        }),
+
+    });
+
+    const result = await response.json();
+    console.log(result);
+
+    if (result.success) {
+
+        showToast(result.message);
+
+        cart = [];
+
+        renderCart();
+
+        document.getElementById("change").innerHTML = "Rp 0";
+
+        document.getElementById("btn-pay").disabled = true;
+
+        cashInput.value = "";
+
+        resultBox.innerHTML = "";
+
+        searchInput.value = "";
+
+        searchInput.focus();
+
+    } else {
+
+        showToast(result.message, 'danger');
+
+    }
+
+}
+
+document
+    .getElementById("btn-pay")
+    .addEventListener("click", checkout);
+    
+}
+
+function showToast(message, type = 'success') {
+
+    const toastElement = document.getElementById('app-toast');
+
+    const toastMessage = document.getElementById('toast-message');
+
+    toastMessage.innerHTML = message;
+
+    toastElement.classList.remove(
+        'text-bg-success',
+        'text-bg-danger'
+    );
+
+    toastElement.classList.add(
+        type === 'success'
+            ? 'text-bg-success'
+            : 'text-bg-danger'
+    );
+
+    const toast = new Toast(toastElement);
+
+    toast.show();
 
 }

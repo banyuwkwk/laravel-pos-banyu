@@ -9,6 +9,19 @@
     subtitle="Monitor your sales performance"
 />
 
+<div class="mb-4">
+
+<a href="{{ route(
+    'reports.sales.export.excel'
+) }}"
+class="btn btn-success">
+
+Export Excel
+
+</a>
+
+</div>
+
 @include('reports.partials.filter')
 
 @include('reports.partials.summary')

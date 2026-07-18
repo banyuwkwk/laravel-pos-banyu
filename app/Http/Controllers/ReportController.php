@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Services\ReportService;
 
+use App\Exports\SalesReportExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 class ReportController extends Controller
 {
 
@@ -37,6 +40,14 @@ class ReportController extends Controller
         return view(
             'reports.show',
             $data
+        );
+    }
+
+    public function exportExcel()
+    {
+        return Excel::download(
+            new SalesReportExport,
+            'sales-report.xlsx'
         );
     }
 }

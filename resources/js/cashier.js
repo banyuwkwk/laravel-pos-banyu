@@ -6,6 +6,7 @@ if (searchInput) {
 
     const resultBox = document.getElementById('search-result');
     const cashInput = document.getElementById('cash');
+    const payButton = document.getElementById('btn-pay');
 
     let cart = [];
 
@@ -28,24 +29,76 @@ if (searchInput) {
 
         products.forEach(product => {
 
+            let stockBadge = '';    
+
+            if (product.stock <= 0) {
+
+                stockBadge = `
+                    <span class="badge bg-danger">
+                        Stock Habis
+                    </span>
+                `;
+
+            } else if (product.stock <= 5) {
+
+                stockBadge = `
+                    <span class="badge bg-warning text-dark">
+                        Stock : ${product.stock}
+                    </span>
+                `;
+
+            } else {
+
+                stockBadge = `
+                    <span class="badge bg-success">
+                        Stock : ${product.stock}
+                    </span>
+                `;
+
+            }
+
+            const isOutOfStock = product.stock <= 0;
+
             html += `
-<button
-type="button"
-class="list-group-item list-group-item-action"
-onclick="addToCart(${product.id}, '${product.name}', ${product.price})">
+        <button
+        type="button"
+        class="list-group-item list-group-item-action ${isOutOfStock ? 'disabled opacity-50' : ''}"
+        ${!isOutOfStock
+            ? `onclick="addToCart(
+                ${product.id},
+                '${product.name}',
+                ${product.price},
+                ${product.stock}
+                )"`
+                : ''}
+                style="${isOutOfStock ? 'cursor:not-allowed;' : ''}">
 
-<strong>${product.name}</strong>
+        <div class="d-flex justify-content-between align-items-center">
 
-<br>
+        <div>
 
-<small class="text-muted">
+        <strong>${product.name}</strong>
 
-${product.sku}
+        <br>
 
-</small>
+        <small class="text-muted">
 
-</button>
-`;
+        ${product.sku}
+
+        </small>
+
+        </div>
+
+        <div>
+
+        ${stockBadge}
+
+        </div>
+
+        </div>
+
+        </button>
+        `;
 
         });
 
@@ -56,14 +109,22 @@ ${product.sku}
     cashInput.addEventListener('keyup', calculateChange);
     cashInput.addEventListener('change', calculateChange);
 
-    window.addToCart = function(id, name, price)
+    window.addToCart = function(id, name, price, stock)
     {
 
         const existing = cart.find(item => item.id === id);
 
-        if (existing) {
+    if (existing) {
 
-            existing.qty++;
+        if (existing.qty >= existing.stock) {
+
+            showToast('Stock tidak mencukupi.', 'danger');
+
+            return;
+
+        }
+
+        existing.qty++;
 
         } else {
 
@@ -72,7 +133,8 @@ ${product.sku}
                 id,
                 name,
                 price: Number(price),
-                qty: 1
+                stock,
+                qty: 1,
 
             });
 
@@ -99,17 +161,21 @@ ${product.sku}
 
     window.increaseQty = function(id)
     {
-
         const item = cart.find(item => item.id === id);
 
-        if (item) {
+        if (!item) return;
 
-            item.qty++;
+        if (item.qty >= item.stock) {
+
+            showToast('Stock tidak mencukupi.', 'danger');
+
+            return;
 
         }
 
-        renderCart();
+        item.qty++;
 
+        renderCart();
     }
 
     window.decreaseQty = function(id)
@@ -253,72 +319,86 @@ onclick="removeItem(${item.id})">
 
     }
 
-    async function checkout() {
+async function checkout() {
 
-    console.log("Checkout clicked");
+    try {
 
-    const cash = Number(cashInput.value);
+        console.log("Checkout clicked");
 
-    const response = await fetch('/dashboard/sales', {
+        payButton.disabled = true;
 
-        method: 'POST',
+        payButton.innerHTML = `
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Processing...
+        `;
 
-        headers: {
+        const cash = Number(cashInput.value);
 
-            'Content-Type': 'application/json',
+        const response = await fetch('/dashboard/sales', {
 
-            'X-CSRF-TOKEN': document
-                .querySelector('meta[name="csrf-token"]')
-                .content,
+            method: 'POST',
 
-        },
+            headers: {
 
-        body: JSON.stringify({
+                'Content-Type': 'application/json',
 
-            invoice_number: document.querySelector('input[readonly]').value,
+                'X-CSRF-TOKEN': document
+                    .querySelector('meta[name="csrf-token"]')
+                    .content,
 
-            cash: cash,
+            },
 
-            cart: cart,
+            body: JSON.stringify({
 
-        }),
+                invoice_number: document.querySelector('input[readonly]').value,
 
-    });
+                cash: cash,
 
-    const result = await response.json();
-    console.log(result);
+                cart: cart,
 
-    if (result.success) {
+            }),
 
-        showToast(result.message);
+        });
 
-        cart = [];
+        const result = await response.json();
 
-        renderCart();
+        console.log(result);
 
-        document.getElementById("change").innerHTML = "Rp 0";
+        if (result.success) {
 
-        document.getElementById("btn-pay").disabled = true;
+            showToast(result.message);
 
-        cashInput.value = "";
+            setTimeout(() => {
 
-        resultBox.innerHTML = "";
+                window.location.href = "/dashboard/sales";
 
-        searchInput.value = "";
+            }, 1200);
 
-        searchInput.focus();
+        } else {
 
-    } else {
+            payButton.disabled = false;
 
-        showToast(result.message, 'danger');
+            payButton.innerHTML = "Pay Now";
+
+            showToast(result.message, "danger");
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        payButton.disabled = false;
+
+        payButton.innerHTML = "Pay Now";
+
+        showToast("Terjadi kesalahan.", "danger");
 
     }
 
 }
 
-document
-    .getElementById("btn-pay")
-    .addEventListener("click", checkout);
+payButton.addEventListener("click", checkout);
     
 }
 

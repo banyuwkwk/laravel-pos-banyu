@@ -3,38 +3,71 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Repositories\Interfaces\DashboardRepositoryInterface;
 
 class DashboardService
 {
     public function __construct(
-        protected ProductService $productService,
-        protected CategoryService $categoryService
+        // protected ProductService $productService,
+        // protected CategoryService $categoryService
+        protected DashboardRepositoryInterface $dashboardRepository
     ) {}
 
     public function getDashboardData(): array
     {
+        $todayRevenue = $this->dashboardRepository
+            ->todayRevenue();
+
+        $yesterdayRevenue = $this->dashboardRepository
+            ->yesterdayRevenue();
+
+        if ($yesterdayRevenue > 0) {
+
+            $revenueGrowth =
+                (($todayRevenue - $yesterdayRevenue)
+                / $yesterdayRevenue) * 100;
+
+        } else {
+
+            $revenueGrowth = 0;
+
+        }
+
         return [
 
             'title' => 'Dashboard',
 
             'welcome' => 'Welcome back, ' . auth()->user()->name,
 
-            'stats' => [
+            'stats' => $this->dashboardRepository
+                ->getStatistics(),
 
-                'products' => $this->productService->count(),
+            'lowStocks' => $this->dashboardRepository
+                ->lowStock(),
 
-                'categories' => $this->categoryService->count(),
+            'latestProducts' => $this->dashboardRepository
+                ->latestProducts(),
 
-                'sales_today' => 0,
+            'recentTransactions' => $this->dashboardRepository
+                ->recentTransactions(),
 
-                'users' => User::count(),
+            'salesChart' => $this->dashboardRepository
+                ->salesChart(),
 
-            ],
+            'revenueGrowth' => round($revenueGrowth, 1),
 
-            'lowStocks' => $this->productService->lowStock(),
+            'topSellingProducts' => $this->dashboardRepository
+                ->topSellingProducts(),
 
-            'latestProducts' => $this->productService->latest(),
+            'salesByCategory'=>$this->dashboardRepository
+                ->getSalesByCategory()
 
         ];
+    }
+
+    public function getStatistics(): array
+    {
+        return $this->dashboardRepository
+            ->getStatistics();
     }
 }

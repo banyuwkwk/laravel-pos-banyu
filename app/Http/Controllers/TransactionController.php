@@ -71,6 +71,25 @@ public function store(StoreTransactionRequest $request)
     }
 }
 
+    public function show(int $id)
+    {
+        $transaction = $this->transactionService->show($id);
+
+        if (!$transaction) {
+
+            abort(404);
+
+        }
+
+        return view('transactions.show', [
+
+            'title' => 'Transaction Detail',
+
+            'transaction' => $transaction,
+
+        ]);
+    }
+
     public function search()
     {
         $keyword = request('search');

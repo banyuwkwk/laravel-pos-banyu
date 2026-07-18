@@ -46,3 +46,37 @@ body{
     font-family:'Inter',sans-serif;
     background:var(--background);
 }
+
+@media print {
+
+    .sidebar,
+    .navbar,
+    .no-print {
+
+        display: none !important;
+
+    }
+
+    main {
+
+        margin: 0 !important;
+
+        padding: 0 !important;
+
+    }
+
+    .card {
+
+        border: none !important;
+
+        box-shadow: none !important;
+
+    }
+
+    body {
+
+        background: white !important;
+
+    }
+
+}

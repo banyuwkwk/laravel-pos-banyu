@@ -7,6 +7,14 @@ use Illuminate\Support\ServiceProvider;
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use App\Repositories\TransactionRepository;
 
+use App\Repositories\DashboardRepository;
+use App\Repositories\Interfaces\DashboardRepositoryInterface;
+
+use App\Repositories\CategoryRepository;    
+use App\Repositories\ProductRepository;
+use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -27,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             TransactionRepositoryInterface::class,
             TransactionRepository::class
+        );
+
+        $this->app->bind(
+            DashboardRepositoryInterface::class,
+            DashboardRepository::class
         );
     }
 

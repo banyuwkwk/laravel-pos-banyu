@@ -119,4 +119,10 @@ class TransactionService
 
         });
     }
+
+    public function show(int $id): ?Transaction
+    {
+        return $this->transactionRepository
+            ->findWithDetails($id);
+    }
 }

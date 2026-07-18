@@ -29,4 +29,15 @@ class TransactionRepository implements TransactionRepositoryInterface
     {
         return Transaction::create($data);
     }
+
+    public function findWithDetails(int $id): ?Transaction
+    {
+        return Transaction::with([
+
+            'user',
+
+            'details.product',
+
+        ])->find($id);
+    }
 }

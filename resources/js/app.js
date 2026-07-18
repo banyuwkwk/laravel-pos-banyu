@@ -1,5 +1,6 @@
 import './bootstrap';
-// import '/.dashboard'
+import './dashboard';
+import './sales-category';
 // import './product'
 import './cashier';
 // import './pages/transaction-create';    
@@ -10,3 +11,4 @@ import Alpine from 'alpinejs';
 window.Alpine = Alpine;
 
 Alpine.start();
+

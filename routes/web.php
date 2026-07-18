@@ -66,6 +66,10 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::middleware('permission:view sales')
         ->get('/transactions', [TransactionController::class, 'index'])
         ->name('transactions.index');
+        
+    Route::middleware('permission:view sales')
+        ->get('/transactions/{id}', [TransactionController::class, 'show'])
+        ->name('transactions.show');
 
     Route::middleware('permission:create sales')
         ->get('/sales', [TransactionController::class, 'create'])

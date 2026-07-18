@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ReportController;
 
 Route::redirect('/', '/dashboard');
 
@@ -66,7 +67,7 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::middleware('permission:view sales')
         ->get('/transactions', [TransactionController::class, 'index'])
         ->name('transactions.index');
-        
+
     Route::middleware('permission:view sales')
         ->get('/transactions/{id}', [TransactionController::class, 'show'])
         ->name('transactions.show');
@@ -82,6 +83,14 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::middleware('permission:create sales')
         ->get('/sales/search', [TransactionController::class, 'search'])
         ->name('sales.search');
+
+    Route::middleware('permission:view reports')
+        ->get('/reports/sales', [ReportController::class, 'sales'])
+        ->name('reports.sales');
+
+    Route::middleware('permission:view reports')
+        ->get('/reports/sales/{id}', [ReportController::class, 'show'])
+        ->name('reports.sales.show');
 
 });
 

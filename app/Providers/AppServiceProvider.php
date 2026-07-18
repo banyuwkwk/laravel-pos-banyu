@@ -15,6 +15,9 @@ use App\Repositories\ProductRepository;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 
+use App\Repositories\ReportRepository;
+use App\Repositories\Interfaces\ReportRepositoryInterface;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -40,6 +43,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             DashboardRepositoryInterface::class,
             DashboardRepository::class
+        );
+
+        $this->app->bind(
+            ReportRepositoryInterface::class,
+            ReportRepository::class
         );
     }
 

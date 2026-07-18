@@ -43,6 +43,8 @@ class PermissionSeeder extends Seeder
             'update permissions',
             'delete permissions',
 
+            'view reports',
+
         ];
 
         foreach ($permissions as $permission) {

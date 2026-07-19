@@ -14,9 +14,41 @@ class SalesReportExport implements
     WithMapping
 {
 
+    protected $startDate;
+
+    protected $endDate;
+
+
+    public function __construct(
+        ?string $startDate = null,
+        ?string $endDate = null
+    )
+    {
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
+    }
+
+
     public function collection()
     {
-        return Transaction::with('user')
+        
+        $query = Transaction::with('user');
+
+
+        if($this->startDate && $this->endDate){
+
+            $query->whereBetween(
+                'created_at',
+                [
+                    $this->startDate,
+                    $this->endDate . ' 23:59:59'
+                ]
+            );
+
+        }
+
+
+        return $query
             ->latest()
             ->get();
     }

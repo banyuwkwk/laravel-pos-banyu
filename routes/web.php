@@ -99,6 +99,13 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
         )
         ->name('reports.sales.export.excel');
 
+    Route::middleware('permission:view reports')
+        ->get(
+            '/reports/sales/export/pdf',
+            [ReportController::class, 'exportPdf']
+        )
+        ->name('reports.sales.export.pdf');
+
 });
 
 require __DIR__.'/auth.php';

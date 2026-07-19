@@ -88,6 +88,25 @@
 
     </li>
     @endcan
+
+    @can('view reports')
+
+<li class="nav-item">
+
+    <a
+        href="{{ route('reports.sales') }}"
+        class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
+
+        <i class="bi bi-graph-up-arrow me-2"></i>
+
+        Sales Report
+
+    </a>
+
+</li>
+
+@endcan
+
 <form method="POST" action="{{ route('logout') }}">
     @csrf
 

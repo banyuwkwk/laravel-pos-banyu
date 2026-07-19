@@ -8,7 +8,9 @@
     :title="$title"
     subtitle="Transaction History" />
 
-<div class="d-flex justify-content-end mb-3">
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div></div>
 
     @can('create sales')
 
@@ -26,26 +28,8 @@
 
 </div>
 
-<x-ui.card>
+@include('transactions.partials.filter')
 
-    <div class="text-center py-5">
-
-        <i class="bi bi-receipt fs-1 text-secondary"></i>
-
-        <h5 class="mt-3">
-
-            No Transactions Yet
-
-        </h5>
-
-        <p class="text-muted">
-
-            Start your first sales transaction.
-
-        </p>
-
-    </div>
-
-</x-ui.card>
+@include('transactions.partials.table')
 
 @endsection

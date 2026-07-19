@@ -8,6 +8,7 @@ use App\Services\ReportService;
 
 use App\Exports\SalesReportExport;
 use Maatwebsite\Excel\Facades\Excel;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReportController extends Controller
 {
@@ -43,11 +44,30 @@ class ReportController extends Controller
         );
     }
 
-    public function exportExcel()
+    public function exportExcel(Request $request)
     {
         return Excel::download(
-            new SalesReportExport,
+            new SalesReportExport(
+                $request->start_date,
+                $request->end_date
+            ),
             'sales-report.xlsx'
         );
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $data = $this->reportService
+            ->getSalesReport(
+                $request->start_date,
+                $request->end_date
+            );
+
+        $pdf = Pdf::loadView(
+            'reports.pdf.sales',
+            $data
+        );
+
+        return $pdf->download('sales-report.pdf');
     }
 }

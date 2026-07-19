@@ -25,8 +25,17 @@ class CategoryService
 
             $data['slug'] = Str::slug($data['name']);
 
-            return $this->categoryRepository->store($data);
+            $category = $this->categoryRepository
+                ->store($data);
 
+
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($category)
+                ->log("Created category {$category->name}");
+
+
+            return $category;
         });
     }
 
@@ -36,7 +45,17 @@ class CategoryService
 
             $data['slug'] = Str::slug($data['name']);
 
-            return $this->categoryRepository->update($category, $data);
+            $result = $this->categoryRepository
+                ->update($category, $data);
+
+
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($category)
+                ->log("Updated category {$category->name}");
+
+
+            return $result;
 
         });
     }
@@ -45,7 +64,18 @@ class CategoryService
     {
         return DB::transaction(function () use ($category) {
 
-            return $this->categoryRepository->destroy($category);
+            $categoryName = $category->name;
+
+            $result = $this->categoryRepository
+                ->destroy($category);
+
+
+            activity()
+                ->causedBy(auth()->user())
+                ->log("Deleted category {$categoryName}");
+
+
+            return $result;
 
         });
     }

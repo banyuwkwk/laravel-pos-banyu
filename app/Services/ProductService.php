@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
+use Spatie\Activitylog\Models\Activity;
+
 use App\Models\Product;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 
@@ -39,7 +41,14 @@ class ProductService
                 $data['image'] = $data['image']->store('products', 'public');
             } 
 
-            return $this->productRepository->store($data);
+            $product = $this->productRepository->store($data);
+
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($product)
+                ->log("Created product {$product->name}");
+
+            return $product;
 
         });
     }
@@ -71,8 +80,17 @@ class ProductService
 
             }
 
-            return $this->productRepository
+            $result = $this->productRepository
                 ->update($product, $data);
+
+
+            activity()
+                ->causedBy(auth()->user())
+                ->performedOn($product)
+                ->log("Updated product {$product->name}");
+
+
+            return $result;
 
         });
     }
@@ -81,6 +99,8 @@ class ProductService
     {
         return DB::transaction(function () use ($product) {
 
+            $productName = $product->name;
+
             if ($product->image) {
 
                 Storage::disk('public')
@@ -88,8 +108,16 @@ class ProductService
 
             }
 
-            return $this->productRepository
+            $result = $this->productRepository
                 ->destroy($product);
+
+
+            activity()
+                ->causedBy(auth()->user())
+                ->log("Deleted product {$productName}");
+
+
+            return $result;
 
         });
     }

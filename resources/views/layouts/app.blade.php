@@ -44,8 +44,6 @@
 
 </body>
 
-<x-ui.confirm-modal />
-
 <x-ui.toast />
 
 </html>

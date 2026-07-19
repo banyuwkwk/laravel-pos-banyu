@@ -1,13 +1,15 @@
 import './bootstrap';
 import './dashboard';
 import './sales-category';
-// import "./components/confirm";
-// import './product'
 import './cashier';
-// import './pages/transaction-create';    
+
 import { attachLoading } from "./components/loading";
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import * as bootstrap from 'bootstrap';
+
+window.bootstrap = bootstrap;
+
 import '../css/app.css';
+
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;

@@ -93,7 +93,7 @@ class TransactionService
 
             ]);
 
-            foreach ($data['cart'] as $item) {
+        foreach ($data['cart'] as $item) {
 
             $product = Product::findOrFail($item['id']);
 
@@ -115,7 +115,19 @@ class TransactionService
 
         }
 
-            return $transaction;
+
+        activity()
+            ->causedBy(auth()->user())
+            ->performedOn($transaction)
+            ->withProperties([
+                'invoice' => $transaction->invoice_number,
+                'total' => $transaction->grand_total,
+                'items' => count($data['cart']),
+            ])
+            ->log("Created transaction {$transaction->invoice_number}");
+
+
+        return $transaction;
 
         });
     }

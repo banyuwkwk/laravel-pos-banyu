@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ActivityLogController;
 
 Route::redirect('/', '/dashboard');
 
@@ -106,6 +107,10 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
         )
         ->name('reports.sales.export.pdf');
 
+    Route::middleware('permission:view activity logs')
+        ->get('/activity-logs', [ActivityLogController::class, 'index'])
+        ->name('activity-logs.index');
+        
 });
 
 require __DIR__.'/auth.php';

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\View;
+
 use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use App\Repositories\TransactionRepository;
 
@@ -17,6 +19,9 @@ use App\Repositories\Interfaces\ProductRepositoryInterface;
 
 use App\Repositories\ReportRepository;
 use App\Repositories\Interfaces\ReportRepositoryInterface;
+
+use App\Repositories\ActivityLogRepository;
+use App\Repositories\Interfaces\ActivityLogRepositoryInterface;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -49,6 +54,11 @@ class AppServiceProvider extends ServiceProvider
             ReportRepositoryInterface::class,
             ReportRepository::class
         );
+
+        $this->app->bind(
+            ActivityLogRepositoryInterface::class,
+            ActivityLogRepository::class
+        );
     }
 
     /**
@@ -57,5 +67,22 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        View::composer('*', function ($view) {
+
+            $dashboardRepository = app(
+                DashboardRepositoryInterface::class
+            );
+
+            $view->with(
+
+                'notifications',
+
+                $dashboardRepository
+                    ->lowStockNotifications()
+
+            );
+
+        });
     }
 }

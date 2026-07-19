@@ -60,7 +60,10 @@ class DashboardService
                 ->topSellingProducts(),
 
             'salesByCategory'=>$this->dashboardRepository
-                ->getSalesByCategory()
+                ->getSalesByCategory(),
+
+            'notifications' => $this->dashboardRepository
+                ->lowStockNotifications(),
 
         ];
     }

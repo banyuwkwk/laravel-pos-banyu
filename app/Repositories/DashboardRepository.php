@@ -137,4 +137,12 @@ class DashboardRepository implements DashboardRepositoryInterface
             ->groupBy('categories.name')
             ->get();
     }
+
+    public function lowStockNotifications()
+    {
+        return Product::where('stock', '<=', 10)
+            ->orderBy('stock')
+            ->take(5)
+            ->get();
+    }
 }

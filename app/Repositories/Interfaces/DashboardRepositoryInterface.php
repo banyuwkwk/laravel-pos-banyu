@@ -21,4 +21,6 @@ interface DashboardRepositoryInterface
     public function topSellingProducts();
 
     public function getSalesByCategory();
+
+    public function lowStockNotifications();
 }

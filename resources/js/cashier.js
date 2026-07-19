@@ -1,4 +1,4 @@
-import { Toast } from 'bootstrap';
+import { showToast } from "./components/toast";
 
 const searchInput = document.getElementById('search-product');
 
@@ -401,29 +401,3 @@ async function checkout() {
 payButton.addEventListener("click", checkout);
     
 }
-
-function showToast(message, type = 'success') {
-
-    const toastElement = document.getElementById('app-toast');
-
-    const toastMessage = document.getElementById('toast-message');
-
-    toastMessage.innerHTML = message;
-
-    toastElement.classList.remove(
-        'text-bg-success',
-        'text-bg-danger'
-    );
-
-    toastElement.classList.add(
-        type === 'success'
-            ? 'text-bg-success'
-            : 'text-bg-danger'
-    );
-
-    const toast = new Toast(toastElement);
-
-    toast.show();
-
-}
-

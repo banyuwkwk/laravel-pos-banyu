@@ -40,10 +40,11 @@
 </div>
 
 </div>
-
 @stack('scripts')
 
 </body>
+
+<x-ui.confirm-modal />
 
 <x-ui.toast />
 

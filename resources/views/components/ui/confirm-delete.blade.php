@@ -30,11 +30,39 @@
 
             </div>
 
-            <div class="modal-body">
+<div class="modal-body text-center py-4">
 
-                {{ $message }}
+    <div
+        class="bg-danger-subtle rounded-circle
+        d-inline-flex align-items-center justify-content-center mb-3"
+        style="width:80px;height:80px;">
 
-            </div>
+        <i
+            class="bi bi-trash3-fill
+            text-danger fs-1">
+        </i>
+
+    </div>
+
+    <h5 class="fw-semibold mb-2">
+
+        Are you sure?
+
+    </h5>
+
+    <p class="text-muted mb-2">
+
+        {{ $message }}
+
+    </p>
+
+    <small class="text-danger">
+
+        This action cannot be undone.
+
+    </small>
+
+</div>
 
             <div class="modal-footer">
 
@@ -46,21 +74,25 @@
 
                 </button>
 
-                <form
-                    action="{{ $action }}"
-                    method="POST">
+<form
+    action="{{ $action }}"
+    method="POST"
+    class="delete-form">
 
-                    @csrf
-                    @method('DELETE')
+    @csrf
+    @method('DELETE')
 
-                    <button
-                        class="btn btn-danger">
+    <button
+        type="submit"
+        class="btn btn-danger">
 
-                        Delete
+        <i class="bi bi-trash"></i>
 
-                    </button>
+        Delete
 
-                </form>
+    </button>
+
+</form>
 
             </div>
 

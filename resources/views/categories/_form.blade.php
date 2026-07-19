@@ -58,14 +58,15 @@
 
 <div class="d-flex gap-2">
 
-    <button
-        class="btn btn-primary">
+<button
+    type="submit"
+    class="btn btn-primary">
 
-        <i class="bi bi-check-circle"></i>
+    <i class="bi bi-check-circle"></i>
 
-        Save
+    Save
 
-    </button>
+</button>
 
     <a
         href="{{ route('categories.index') }}"

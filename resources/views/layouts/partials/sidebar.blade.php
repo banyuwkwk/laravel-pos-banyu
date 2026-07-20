@@ -107,6 +107,21 @@
 
 @endcan
 
+@can('view activity logs')
+<li class="nav-item">
+
+    <a href="{{ route('activity-logs.index') }}"
+       class="nav-link {{ request()->routeIs('activity-logs.*') ? 'active' : '' }}">
+
+        <i class="bi bi-clock-history"></i>
+
+        <span>Activity Logs</span>
+
+    </a>
+
+</li>
+@endcan
+
 <form method="POST" action="{{ route('logout') }}">
     @csrf
 

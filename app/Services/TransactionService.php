@@ -8,11 +8,16 @@ use App\Repositories\Interfaces\TransactionRepositoryInterface;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use App\Models\Product;
+use App\Services\NotificationService;
+
+use App\Notifications\TransactionCreatedNotification;
+
 
 class TransactionService
 {
     public function __construct(
-        protected TransactionRepositoryInterface $transactionRepository
+        protected TransactionRepositoryInterface $transactionRepository,
+        protected NotificationService $notificationService
     ) {
     }
 
@@ -113,7 +118,21 @@ class TransactionService
 
             $product->decrement('stock', $item['qty']);
 
+            $product->refresh();
+
+                if ($product->stock <= 3) {
+
+                    $this->notificationService
+                        ->notifyLowStock($product);
+
+                }
+
         }
+
+        $this->notificationService
+            ->notifyAdmins(
+                new TransactionCreatedNotification($transaction)
+            );
 
 
         activity()

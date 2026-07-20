@@ -23,6 +23,9 @@ use App\Repositories\Interfaces\ReportRepositoryInterface;
 use App\Repositories\ActivityLogRepository;
 use App\Repositories\Interfaces\ActivityLogRepositoryInterface;
 
+use App\Repositories\NotificationRepository;
+use App\Repositories\Interfaces\NotificationRepositoryInterface;
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -56,6 +59,11 @@ class AppServiceProvider extends ServiceProvider
             ActivityLogRepositoryInterface::class,
             ActivityLogRepository::class
         );
+
+        $this->app->bind(
+            NotificationRepositoryInterface::class,
+            NotificationRepository::class
+        );
     }
 
     /**
@@ -67,17 +75,13 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('*', function ($view) {
 
-            $dashboardRepository = app(
-                DashboardRepositoryInterface::class
+            $notificationRepository = app(
+                NotificationRepositoryInterface::class
             );
 
             $view->with(
-
-                'notifications',
-
-                $dashboardRepository
-                    ->lowStockNotifications()
-
+                'navbarNotifications',
+                $notificationRepository->latestUnread()
             );
 
         });

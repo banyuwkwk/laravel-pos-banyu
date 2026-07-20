@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ActivityLogController;
+use App\Http\Controllers\NotificationController;
 
 Route::redirect('/', '/dashboard');
 
@@ -110,7 +111,37 @@ Route::middleware(['auth'])->prefix('dashboard')->group(function () {
     Route::middleware('permission:view activity logs')
         ->get('/activity-logs', [ActivityLogController::class, 'index'])
         ->name('activity-logs.index');
+    
+    Route::middleware('permission:view notifications')
+    ->group(function () {
+
+        Route::get(
+            '/notifications',
+            [NotificationController::class, 'index']
+        )->name('notifications.index');
+
+        Route::patch(
+            '/notifications/{id}/read',
+            [NotificationController::class, 'markAsRead']
+        )->name('notifications.read');
+
+        Route::patch(
+            '/notifications/read-all',
+            [NotificationController::class, 'markAllAsRead']
+        )->name('notifications.read-all');
+
+        Route::delete(
+            '/notifications/clear-read',
+            [NotificationController::class, 'clearRead']
+        )->name('notifications.clear-read');
         
+        Route::delete(
+            '/notifications/{id}',
+            [NotificationController::class, 'destroy']
+        )->name('notifications.destroy');
+
+
+    });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';    

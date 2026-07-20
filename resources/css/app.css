@@ -79,4 +79,14 @@ body{
 
     }
 
+    .notification-link{
+    transition: .2s ease;
+    border-radius: .75rem;
+    padding: .5rem;
+    }
+
+    a:hover .notification-link{
+        background:#f8f9fa;
+    }
+
 }

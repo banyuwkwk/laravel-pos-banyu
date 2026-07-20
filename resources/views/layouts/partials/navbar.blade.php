@@ -17,12 +17,12 @@
 
                 <i class="bi bi-bell fs-5"></i>
 
-                @if($notifications->count())
+                @if($navbarNotifications->count())
 
                     <span
                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
 
-                        {{ $notifications->count() }}
+                        {{ $navbarNotifications->count() }}
 
                     </span>
 
@@ -38,69 +38,78 @@
 
                     <strong>
 
-                        Low Stock Notification
+                        Notifications
 
                     </strong>
 
                 </div>
 
-                @forelse($notifications as $product)
+                @forelse($navbarNotifications as $notification)
 
-                    <div class="dropdown-item py-3">
+                <form
+                    class="m-0"
+                    method="POST"
+                    action="{{ route('notifications.read', $notification->id) }}">
 
-                        <div class="d-flex justify-content-between align-items-center">
+                    @csrf
+                    @method('PATCH')
 
-                            <strong>
+                    <button
+                        type="submit"
+                        class="dropdown-item py-3 border-0 bg-transparent text-start w-100">
 
-                                {{ $product->name }}
+                        <div class="d-flex align-items-start gap-2">
 
-                            </strong>
+                            <i class="bi {{ $notification->data['icon'] ?? 'bi-bell' }}
+                                text-{{ $notification->data['color'] ?? 'secondary' }}"></i>
 
-                            <span class="badge {{ $product->stock <= 2 ? 'bg-danger' : 'bg-warning text-dark' }}">
+                            <div class="flex-grow-1">
 
-                                {{ $product->stock }}
+                                <div class="fw-semibold">
+                                    {{ $notification->data['title'] ?? 'Notification' }}
+                                </div>
 
-                            </span>
+                                <small class="text-muted d-block">
+                                    {{ $notification->data['message'] ?? '-' }}
+                                </small>
+
+                                <small class="text-muted">
+                                    {{ $notification->created_at->diffForHumans() }}
+                                </small>
+
+                            </div>
 
                         </div>
 
-                        <small class="text-muted">
+                    </button>
 
-                            Restock recommended.
-
-                        </small>
-
-                    </div>
+                </form>
 
                 @empty
 
-                    <div class="dropdown-item text-center py-4">
+                <div class="dropdown-item text-center py-4">
 
-                        <i class="bi bi-check-circle text-success fs-3"></i>
+                    <i class="bi bi-check-circle text-success fs-3"></i>
 
-                        <br>
+                    <br>
 
-                        No low stock products.
+                    No Notifications
 
-                    </div>
+                </div>
 
                 @endforelse
 
-                @if($notifications->count())
+                        <div class="border-top">
 
-                    <div class="border-top">
+                            <a
+                                href="{{ route('notifications.index') }}"
+                                class="dropdown-item text-center py-2">
 
-                        <a
-                            href="{{ route('products.index') }}"
-                            class="dropdown-item text-center py-2">
+                                View All Notifications
 
-                            View Inventory
+                            </a>
 
-                        </a>
-
-                    </div>
-
-                @endif
+                        </div>
 
             </div>
 

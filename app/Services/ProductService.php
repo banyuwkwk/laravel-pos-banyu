@@ -13,10 +13,16 @@ use Spatie\Activitylog\Models\Activity;
 use App\Models\Product;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 
+use App\Notifications\ProductCreatedNotification;
+use App\Notifications\ProductUpdatedNotification;
+use App\Notifications\ProductDeletedNotification;
+
+
 class ProductService
 {
     public function __construct(
-        protected ProductRepositoryInterface $productRepository
+        protected ProductRepositoryInterface $productRepository,
+        protected NotificationService $notificationService
     ) {}
 
     public function paginate(?string $search = null): LengthAwarePaginator
@@ -42,6 +48,11 @@ class ProductService
             } 
 
             $product = $this->productRepository->store($data);
+
+            $this->notificationService
+                ->notifyAdmins(
+                    new ProductCreatedNotification($product)
+                );
 
             activity()
                 ->causedBy(auth()->user())
@@ -89,6 +100,10 @@ class ProductService
                 ->performedOn($product)
                 ->log("Updated product {$product->name}");
 
+            $this->notificationService->notifyAdmins(
+                new ProductUpdatedNotification($product)
+            );
+
 
             return $result;
 
@@ -115,6 +130,10 @@ class ProductService
             activity()
                 ->causedBy(auth()->user())
                 ->log("Deleted product {$productName}");
+
+            $this->notificationService->notifyAdmins(
+                    new ProductDeletedNotification($productName)
+                );
 
 
             return $result;
